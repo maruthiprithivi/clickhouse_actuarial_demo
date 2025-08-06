@@ -1,0 +1,7 @@
+# ClickHouse Actuarial Demo - Minimal Dependencies
+clickhouse-connect==0.7.19
+pandas==2.2.3
+numpy==1.26.4
+faker==30.8.2
+python-dotenv==1.0.1
+tqdm==4.66.6

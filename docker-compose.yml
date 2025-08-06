@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.6
+    container_name: clickhouse-actuarial
+    ports:
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native protocol
+    environment:
+      CLICKHOUSE_DB: actuarial
+      CLICKHOUSE_USER: demo
+      CLICKHOUSE_PASSWORD: demo123
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    volumes:
+      - ./config/clickhouse:/etc/clickhouse-server/config.d
+      - ./sql/01_create_schema:/docker-entrypoint-initdb.d
+      - clickhouse_data:/var/lib/clickhouse
+      - ./data:/data:ro  # Read-only access to generated data
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    deploy:
+      resources:
+        limits:
+          memory: 4g
+          cpus: '2'
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  clickhouse_data:
+    driver: local

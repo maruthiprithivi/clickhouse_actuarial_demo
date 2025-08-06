@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <users>
+        <!-- Default user configuration -->
+        <default>
+            <password_sha256_hex from_env="DEFAULT_PASSWORD_HASH">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</password_sha256_hex>
+            <access_management>1</access_management>
+            <networks>
+                <ip>::1</ip>
+                <ip>127.0.0.1</ip>
+                <ip>172.20.0.0/16</ip>
+                <ip>10.0.0.0/8</ip>
+                <ip>192.168.0.0/16</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+            <databases>
+                <database>actuarial_analytics</database>
+                <database>default</database>
+                <database>system</database>
+            </databases>
+        </default>
+
+        <!-- Actuarial analyst user (read-only) -->
+        <actuarial_analyst>
+            <password_sha256_hex>5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8</password_sha256_hex>
+            <access_management>0</access_management>
+            <networks>
+                <ip>::1</ip>
+                <ip>127.0.0.1</ip>
+                <ip>172.20.0.0/16</ip>
+            </networks>
+            <profile>readonly</profile>
+            <quota>default</quota>
+            <databases>
+                <database>actuarial_analytics</database>
+                <database>system</database>
+            </databases>
+        </actuarial_analyst>
+
+        <!-- Demo user for workshops -->
+        <demo_user>
+            <password>demo123</password>
+            <access_management>0</access_management>
+            <networks>
+                <ip>::1</ip>
+                <ip>127.0.0.1</ip>
+                <ip>172.20.0.0/16</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+            <databases>
+                <database>actuarial_analytics</database>
+            </databases>
+        </demo_user>
+    </users>
+
+    <!-- Quotas for different user types -->
+    <quotas>
+        <default>
+            <interval>
+                <duration>3600</duration>
+                <queries>1000</queries>
+                <errors>100</errors>
+                <result_rows>0</result_rows>
+                <read_rows>0</read_rows>
+                <execution_time>0</execution_time>
+            </interval>
+        </default>
+        
+        <demo_quota>
+            <interval>
+                <duration>3600</duration>
+                <queries>100</queries>
+                <errors>10</errors>
+                <result_rows>10000000</result_rows>
+                <read_rows>100000000</read_rows>
+                <execution_time>1800</execution_time>
+            </interval>
+        </demo_quota>
+    </quotas>
+
+    <!-- Profiles for different access levels -->
+    <profiles>
+        <readonly>
+            <readonly>1</readonly>
+            <allow_ddl>0</allow_ddl>
+            <max_memory_usage>4294967296</max_memory_usage>
+            <max_execution_time>1800</max_execution_time>
+            <max_query_size>134217728</max_query_size>
+            <max_threads>4</max_threads>
+        </readonly>
+        
+        <demo_profile>
+            <readonly>0</readonly>
+            <allow_ddl>0</allow_ddl>
+            <max_memory_usage>2147483648</max_memory_usage>
+            <max_execution_time>900</max_execution_time>
+            <max_query_size>67108864</max_query_size>
+            <max_threads>4</max_threads>
+        </demo_profile>
+    </profiles>
+</clickhouse>

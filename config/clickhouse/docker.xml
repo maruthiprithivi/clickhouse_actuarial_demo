@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<clickhouse>
+    <!-- Performance optimizations for actuarial workloads -->
+    <profiles>
+        <default>
+            <max_memory_usage>8589934592</max_memory_usage>
+            <use_uncompressed_cache>1</use_uncompressed_cache>
+            <load_balancing>random</load_balancing>
+            <max_threads>8</max_threads>
+            <max_query_size>268435456</max_query_size>
+            <max_execution_time>3600</max_execution_time>
+            <timeout_before_checking_execution_speed>60</timeout_before_checking_execution_speed>
+            
+            <!-- Actuarial-specific optimizations -->
+            <allow_experimental_window_functions>1</allow_experimental_window_functions>
+            <allow_experimental_analyzer>1</allow_experimental_analyzer>
+            <enable_optimize_predicate_expression>1</enable_optimize_predicate_expression>
+            <optimize_move_to_prewhere>1</optimize_move_to_prewhere>
+            
+            <!-- Enable new v25.6 features -->
+            <enable_time_time64_type>1</enable_time_time64_type>
+            <allow_experimental_lightweight_delete>1</allow_experimental_lightweight_delete>
+        </default>
+    </profiles>
+
+    <!-- Network configuration -->
+    <listen_host>0.0.0.0</listen_host>
+    <http_port>8123</http_port>
+    <tcp_port>9000</tcp_port>
+
+    <!-- Logging configuration -->
+    <logger>
+        <level>information</level>
+        <log>/var/log/clickhouse-server/clickhouse-server.log</log>
+        <errorlog>/var/log/clickhouse-server/clickhouse-server.err.log</errorlog>
+        <size>1000M</size>
+        <count>10</count>
+    </logger>
+
+    <!-- Data storage paths -->
+    <path>/var/lib/clickhouse/</path>
+    <tmp_path>/var/lib/clickhouse/tmp/</tmp_path>
+    <user_files_path>/var/lib/clickhouse/user_files/</user_files_path>
+    <format_schema_path>/var/lib/clickhouse/format_schemas/</format_schema_path>
+
+    <!-- Memory and performance settings -->
+    <mark_cache_size>5368709120</mark_cache_size>
+    <uncompressed_cache_size>8589934592</uncompressed_cache_size>
+    <mmap_cache_size>1000</mmap_cache_size>
+    <compiled_expression_cache_size>1073741824</compiled_expression_cache_size>
+    
+    <!-- Background processing -->
+    <background_pool_size>32</background_pool_size>
+    <background_merges_mutations_concurrency_ratio>4</background_merges_mutations_concurrency_ratio>
+    
+    <!-- Query processing -->
+    <max_concurrent_queries>100</max_concurrent_queries>
+    <max_server_memory_usage>0</max_server_memory_usage>
+    <max_server_memory_usage_to_ram_ratio>0.9</max_server_memory_usage_to_ram_ratio>
+    
+    <!-- Timezone -->
+    <timezone>UTC</timezone>
+    
+    <!-- Compression -->
+    <compression>
+        <case>
+            <method>lz4</method>
+        </case>
+    </compression>
+
+    <!-- Built-in query cache (v25.6 feature) -->
+    <query_cache>
+        <max_size_in_bytes>1073741824</max_size_in_bytes>
+        <max_entries>1024</max_entries>
+        <max_entry_size_in_bytes>1048576</max_entry_size_in_bytes>
+        <max_entry_size_in_rows>30000000</max_entry_size_in_rows>
+    </query_cache>
+
+    <!-- Distributed DDL -->
+    <distributed_ddl>
+        <path>/clickhouse/task_queue/ddl</path>
+    </distributed_ddl>
+
+    <!-- Security settings -->
+    <openSSL>
+        <server>
+            <loadDefaultCAFile>true</loadDefaultCAFile>
+            <cacheSessions>true</cacheSessions>
+            <disableProtocols>sslv2,sslv3</disableProtocols>
+            <preferServerCiphers>true</preferServerCiphers>
+        </server>
+        <client>
+            <loadDefaultCAFile>true</loadDefaultCAFile>
+            <cacheSessions>true</cacheSessions>
+            <disableProtocols>sslv2,sslv3</disableProtocols>
+            <preferServerCiphers>true</preferServerCiphers>
+            <verificationMode>none</verificationMode>
+            <invalidCertificateHandler>
+                <name>AcceptCertificateHandler</name>
+            </invalidCertificateHandler>
+        </client>
+    </openSSL>
+</clickhouse>
